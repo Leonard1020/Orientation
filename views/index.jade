@@ -1,0 +1,8 @@
+extends layout
+
+block body
+  div(ng-controller='AppCtrl')
+    h2 !{ ip }:!{ port }
+    p x: {{ current.x }}
+    p y: {{ current.y }}
+    p z: {{ current.z }}
