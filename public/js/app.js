@@ -33,9 +33,9 @@ controller('AppCtrl', function ($scope, $window, mySocket) {
 
   function render() {
     requestAnimationFrame(render);
-    cube.rotation.x = $scope.current.z / -10;
-	//cube.rotation.y = $scope.current.x / -10;
-    cube.rotation.z = $scope.current.y / -10;
+    cube.rotation.x = $scope.current.z / -6;
+	  //cube.rotation.y = $scope.current.x / -10;
+    cube.rotation.z = $scope.current.y / -6;
     renderer.render(scene, camera);
   };
   render();
