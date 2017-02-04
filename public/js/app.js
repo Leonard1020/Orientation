@@ -108,11 +108,6 @@ controller('AppCtrl', function ($scope, $window, mySocket) {
   pivot.add(ship);
 
   setInterval(function() {
-    shootGun({ name: 'bulletleft', geometry: bulletGeometry, material: bulletMaterial, x: -9.5, y: 0, z: 0, rx: pivot.rotation.x, ry: pivot.rotation.y, rz: pivot.rotation.z })
-    shootGun({ name: 'bulletright', geometry: bulletGeometry, material: bulletMaterial, x: 9.5, y: 0, z: 0, rx: pivot.rotation.x, ry: pivot.rotation.y, rz: pivot.rotation.z });
-  }, 500);
-
-  setInterval(function() {
     sendAstroid({ name: 'astroid', material: astroidMaterial });
   }, 1000);
 
@@ -169,5 +164,22 @@ controller('AppCtrl', function ($scope, $window, mySocket) {
     $scope.current.x = data.x;
     $scope.current.y = data.y;
     $scope.current.z = data.z;
+  });
+
+  mySocket.on('fire', function() {
+    shootGun({ name: 'bulletleft', geometry: bulletGeometry, material: bulletMaterial, x: -9.5, y: 0, z: 0, rx: pivot.rotation.x, ry: pivot.rotation.y, rz: pivot.rotation.z })
+    shootGun({ name: 'bulletright', geometry: bulletGeometry, material: bulletMaterial, x: 9.5, y: 0, z: 0, rx: pivot.rotation.x, ry: pivot.rotation.y, rz: pivot.rotation.z });
+  });
+
+  mySocket.on('autofire', function(data) {
+    var autofire = data.autofire;
+    if (autofire) {
+      $scope.autofire = setInterval(function() {
+        shootGun({ name: 'bulletleft', geometry: bulletGeometry, material: bulletMaterial, x: -9.5, y: 0, z: 0, rx: pivot.rotation.x, ry: pivot.rotation.y, rz: pivot.rotation.z })
+        shootGun({ name: 'bulletright', geometry: bulletGeometry, material: bulletMaterial, x: 9.5, y: 0, z: 0, rx: pivot.rotation.x, ry: pivot.rotation.y, rz: pivot.rotation.z });
+      }, 300);
+    } else {
+      clearInterval($scope.autofire);
+    }
   });
 });

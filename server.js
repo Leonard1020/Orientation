@@ -27,6 +27,14 @@ io.on('connection', function(socket) {
   socket.on('message', function(data) {
     io.to(clientID).emit('message', data);
   });
+
+  socket.on('fire', function() {
+    io.to(clientID).emit('fire', {});
+  });
+
+  socket.on('autofire', function(data) {
+    io.to(clientID).emit('autofire', data);
+  });
 });
 
 // serve index and view partials
