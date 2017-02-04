@@ -21,21 +21,46 @@ controller('AppCtrl', function ($scope, $window, mySocket) {
   }
 
   var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight, 1,10000);
+  //var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 1, 10000);
+  var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1, 1000);
   var renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-  var geometry = new THREE.BoxGeometry(500, 900, 100, 5, 10, 2);
-  var material = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true});
-  var cube = new THREE.Mesh(geometry, material);
-  scene.add(cube);
-  camera.position.z = 1000;
+  camera.position.y = 30;
+  camera.position.z = 200;
+
+  var ship = new THREE.Object3D();
+  var shipGeometry = new THREE.BoxGeometry(40, 90, 10);
+  var armGeometry = new THREE.BoxGeometry(10, 10, 10);
+  var gunGeometry = new THREE.BoxGeometry(10, 40, 10);
+  var cubeMaterial = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true});
+
+  function addCube(data) {
+    var cube = new THREE.Mesh(data.geometry, cubeMaterial);
+    cube.position.x = data.x
+    cube.position.y = data.y
+    cube.position.z = data.z
+    cube.rotation.set(0, 0, 0);
+    cube.name = data.name;
+    ship.add(cube);
+  }
+
+  addCube({ name: 'shipbody', geometry: shipGeometry, x: 5, y: 0, z: 2 });
+  addCube({ name: 'shipleftarm', geometry: armGeometry, x: -20, y: 0, z: 2 });
+  addCube({ name: 'shipleftgun', geometry: gunGeometry, x: -30, y: 0, z: 2 });
+  addCube({ name: 'shiprightarm', geometry: armGeometry, x: 30, y: 0, z: 2 });
+  addCube({ name: 'shiprightgun', geometry: gunGeometry, x: 40, y: 0, z: 2 });
+  scene.add(ship);
+
+  var pivot = new THREE.Group();
+  scene.add(pivot);
+  pivot.add(ship);
 
   function render() {
     requestAnimationFrame(render);
-    cube.rotation.x = $scope.current.z / -6;
-	  //cube.rotation.y = $scope.current.x / -10;
-    cube.rotation.z = $scope.current.y / -6;
+    pivot.rotation.x = $scope.current.z / -6;
+	  //pivot.rotation.y = $scope.current.x / -6;
+    pivot.rotation.z = $scope.current.y / -6;
     renderer.render(scene, camera);
   };
   render();
